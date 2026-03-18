@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: usina_eolica_ia
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./scripts:/app/scripts
+      - ./src:/app/src
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TF_CPP_MIN_LOG_LEVEL=2
+    command: python scripts/treinar_modelo.py
+    networks:
+      - ia_network
+
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    container_name: jupyter_notebook
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/work/data
+      - ./src:/home/jovyan/work/src
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    networks:
+      - ia_network
+
+  api:
+    build: .
+    container_name: usina_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+      - ./src:/app/src
+    environment:
+      - PYTHONUNBUFFERED=1
+    
