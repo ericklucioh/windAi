@@ -1,5 +1,4 @@
-from tkinter import Variable
-
+from src.models import Variable
 
 variables = [
     Variable(
