@@ -1,0 +1,82 @@
+[
+  {
+    "vento": 2.5,
+    "temp_ar": 20,
+    "precipitacao": 0,
+    "rpm": 10,
+    "vibracao": 1,
+    "temp_oleo": 50
+  },
+  {
+    "vento": 30,
+    "temp_ar": 22,
+    "precipitacao": 0,
+    "rpm": 15,
+    "vibracao": 1,
+    "temp_oleo": 60
+  },
+  {
+    "vento": 12,
+    "temp_ar": 28,
+    "precipitacao": 0,
+    "rpm": 12,
+    "vibracao": 5,
+    "temp_oleo": 70
+  },
+  {
+    "vento": 10,
+    "temp_ar": 25,
+    "precipitacao": 0,
+    "rpm": 10,
+    "vibracao": 2,
+    "temp_oleo": 95
+  },
+  {
+    "vento": 8,
+    "temp_ar": 38,
+    "precipitacao": 0,
+    "rpm": 9,
+    "vibracao": 2,
+    "temp_oleo": 60
+  },
+  {
+    "vento": 9,
+    "temp_ar": 26,
+    "precipitacao": 40,
+    "rpm": 10,
+    "vibracao": 2,
+    "temp_oleo": 60
+  },
+  {
+    "vento": 12,
+    "temp_ar": 30,
+    "precipitacao": 5,
+    "rpm": 3,
+    "vibracao": 2,
+    "temp_oleo": 60
+  },
+  {
+    "vento": 15,
+    "temp_ar": 18,
+    "precipitacao": 0,
+    "rpm": 20,
+    "vibracao": 1,
+    "temp_oleo": 55
+  },
+  {
+    "vento": 5,
+    "temp_ar": 10,
+    "precipitacao": 0,
+    "rpm": 6,
+    "vibracao": 3,
+    "temp_oleo": 85
+  },
+  {
+    "vento": 18,
+    "temp_ar": 33,
+    "precipitacao": 10,
+    "rpm": 4,
+    "vibracao": 4.5,
+    "temp_oleo": 100
+  }
+]
