@@ -1,0 +1,33 @@
+flowchart TD
+    Start([Início])
+    VentoBaixo{Vento < 3 m/s?}
+    VentoAlto{Vento > 25 m/s?}
+    VibracaoAlta{Vibração > 4 m/s²?}
+    TempOleoAlta{Temp. óleo > 90°C?}
+    TempArAlta{Temp. ar > 35°C?}
+    PrecipitacaoAlta{Precipitação > 30 mm/h?}
+    RpmBaixo{RPM < 5 e Vento > 10 m/s?}
+    Normal[Operação normal\nTodos os parâmetros dentro dos valores esperados]
+    NaoGera[Turbina não gera energia\nVento muito baixo]
+    Desligada[Turbina desligada por segurança\nVento muito alto]
+    FalhaMecanica[Possível falha mecânica\nVibração elevada]
+    Superaquecimento[Superaquecimento\nTemp. do óleo alta]
+    BaixaEficiencia[Baixa eficiência\nTemp. ambiente alta]
+    AltoDesgaste[Alto desgaste\nPrecipitação intensa]
+    FalhaRotacao[Falha na rotação\nRPM baixo mesmo com vento alto]
+
+    Start --> VentoBaixo
+    VentoBaixo -- Sim --> NaoGera
+    VentoBaixo -- Não --> VentoAlto
+    VentoAlto -- Sim --> Desligada
+    VentoAlto -- Não --> VibracaoAlta
+    VibracaoAlta -- Sim --> FalhaMecanica
+    VibracaoAlta -- Não --> TempOleoAlta
+    TempOleoAlta -- Sim --> Superaquecimento
+    TempOleoAlta -- Não --> TempArAlta
+    TempArAlta -- Sim --> BaixaEficiencia
+    TempArAlta -- Não --> PrecipitacaoAlta
+    PrecipitacaoAlta -- Sim --> AltoDesgaste
+    PrecipitacaoAlta -- Não --> RpmBaixo
+    RpmBaixo -- Sim --> FalhaRotacao
+    RpmBaixo -- Não --> Normal
