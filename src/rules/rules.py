@@ -4,50 +4,96 @@ from models.result import Result
 
 def diagnosticar(event: Event) -> Result:
 
-    if event.vento < 3:
+    # RAMO 1: Falha nas pás ou monitoramento?
+    if event.vento < 3 or event.vento > 25:
+        # Pitch travado?
+        if event.rpm < 2:
+            return Result(
+                mensagem="Falha de sensor/atuador",
+                explicacao="RPM muito baixo com vento fora do normal sugere problema no sistema de pitch ou sensor/atuador."
+            )
+        # Pressão hidráulica das pás fora do normal?
+        elif event.pressao_pas < 80 or event.pressao_pas > 160:
+            return Result(
+                mensagem="Vazamento ou ar no óleo",
+                explicacao="Pressão hidráulica das pás fora do normal pode indicar vazamento ou ar no óleo."
+            )
+        # Torque fora do padrão?
+        elif event.torque < 1000 or event.torque > 4000:
+            return Result(
+                mensagem="Erro de calibração",
+                explicacao="Torque das pás fora do padrão pode indicar erro de calibração."
+            )
+        else:
+            return Result(
+                mensagem="Sistema OK",
+                explicacao="Vento fora do normal, mas demais parâmetros aceitáveis."
+            )
+
+    # RAMO 2: Anormalidade em vibração ou temperatura?
+    if event.vibracao > 5 or event.temp_oleo > 80:
+        # Vibração muito alta?
+        if event.vibracao > 5:
+            # Temp. do óleo > 80°C?
+            if event.temp_oleo > 80:
+                # Ruído mecânico fora do padrão?
+                if event.ruido > 80:
+                    return Result(
+                        mensagem="Falha em rolamento",
+                        explicacao="Vibração e temperatura do óleo muito altas, com ruído elevado, sugerem falha em rolamento."
+                    )
+                else:
+                    return Result(
+                        mensagem="Erro de sensor",
+                        explicacao="Vibração e temperatura do óleo altas, mas sem ruído elevado. Verificar sensores."
+                    )
+            else:
+                return Result(
+                    mensagem="Checar sistema de Yaw",
+                    explicacao="Vibração alta, mas temperatura do óleo normal. Checar desalinhamento do Yaw."
+                )
+        # Temp. do óleo > 80°C?
+        elif event.temp_oleo > 80:
+            return Result(
+                mensagem="Ajuste de temperatura",
+                explicacao="Temperatura do óleo alta, mas vibração normal. Ajustar sistema de resfriamento."
+            )
+
+    # RAMO 3: Parâmetros relacionados a óleo e vibração
+    # Pressão do óleo lubrificante fora do normal?
+    if event.pressao_oleo < 1 or event.pressao_oleo > 5:
         return Result(
-            mensagem="Turbina não gera energia",
-            explicacao=f"Velocidade do vento muito baixa ({event.vento} m/s). Mínimo necessário é 3 m/s.",
+            mensagem="Vazamento de óleo ou problema na bomba",
+            explicacao="Pressão do óleo lubrificante fora do normal pode indicar vazamento ou problema na bomba."
+        )
+    # Vibração fora do padrão?
+    if event.vibracao > 5:
+        return Result(
+            mensagem="Erro mecânico",
+            explicacao="Vibração extrema sugere erro mecânico grave."
         )
 
-    elif event.vento > 25:
+    # Novos parâmetros: Potência condiz com velocidade do vento?
+    if not (event.potencia >= 0.5 * event.vento * 100 and event.potencia <= 1.5 * event.vento * 100):
         return Result(
-            mensagem="Turbina desligada por segurança",
-            explicacao=f"Velocidade do vento muito alta ({event.vento} m/s). Limite máximo é 25 m/s.",
+            mensagem="Erro de sensor",
+            explicacao="Potência não condiz com velocidade do vento. Possível erro de sensor."
+        )
+    # Temperatura de rolamento ou gearbox > 90°C?
+    if event.temp_rolamento > 90 or event.temp_gearbox > 90:
+        return Result(
+            mensagem="Falha em rolamento",
+            explicacao="Temperatura de rolamento ou gearbox muito alta pode indicar falha."
+        )
+    # Consumo elétrico anormal?
+    if event.consumo > 400:
+        return Result(
+            mensagem="Erro mecânico",
+            explicacao="Consumo elétrico anormal sugere erro mecânico."
         )
 
-    elif event.vibracao > 4:
-        return Result(
-            mensagem="Possível falha mecânica",
-            explicacao=f"Vibração elevada ({event.vibracao} m/s²). Pode indicar problema estrutural.",
-        )
-
-    elif event.temp_oleo > 90:
-        return Result(
-            mensagem="Superaquecimento",
-            explicacao=f"Temperatura do óleo alta ({event.temp_oleo}°C). Risco de falha em componentes.",
-        )
-
-    elif event.temp_ar > 35:
-        return Result(
-            mensagem="Baixa eficiência",
-            explicacao=f"Temperatura ambiente alta ({event.temp_ar}°C), reduzindo eficiência.",
-        )
-
-    elif event.precipitacao > 30:
-        return Result(
-            mensagem="Alto desgaste",
-            explicacao=f"Precipitação intensa ({event.precipitacao} mm/h) pode causar desgaste.",
-        )
-
-    elif event.rpm < 5 and event.vento > 10:
-        return Result(
-            mensagem="Falha na rotação",
-            explicacao=f"RPM baixo ({event.rpm}) mesmo com vento alto ({event.vento} m/s).",
-        )
-
-    else:
-        return Result(
-            mensagem="Operação normal",
-            explicacao="Todos os parâmetros estão dentro dos valores esperados.",
-        )
+    # Se nada acima, sistema OK
+    return Result(
+        mensagem="Sistema OK",
+        explicacao="Todos os parâmetros estão dentro dos valores esperados."
+    )

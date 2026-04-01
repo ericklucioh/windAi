@@ -5,7 +5,15 @@
     "precipitacao": 0,
     "rpm": 10,
     "vibracao": 1,
-    "temp_oleo": 50
+    "temp_oleo": 50,
+    "pressao_pas": 120,
+    "torque": 2000,
+    "ruido": 60,
+    "pressao_oleo": 3,
+    "potencia": 500,
+    "temp_rolamento": 40,
+    "temp_gearbox": 45,
+    "consumo": 100
   },
   {
     "vento": 30,
@@ -13,7 +21,15 @@
     "precipitacao": 0,
     "rpm": 15,
     "vibracao": 1,
-    "temp_oleo": 60
+    "temp_oleo": 60,
+    "pressao_pas": 110,
+    "torque": 2500,
+    "ruido": 62,
+    "pressao_oleo": 2.5,
+    "potencia": 1000,
+    "temp_rolamento": 45,
+    "temp_gearbox": 50,
+    "consumo": 120
   },
   {
     "vento": 12,
@@ -21,7 +37,15 @@
     "precipitacao": 0,
     "rpm": 12,
     "vibracao": 5,
-    "temp_oleo": 70
+    "temp_oleo": 70,
+    "pressao_pas": 130,
+    "torque": 3000,
+    "ruido": 70,
+    "pressao_oleo": 3.5,
+    "potencia": 1500,
+    "temp_rolamento": 60,
+    "temp_gearbox": 65,
+    "consumo": 200
   },
   {
     "vento": 10,
@@ -29,7 +53,15 @@
     "precipitacao": 0,
     "rpm": 10,
     "vibracao": 2,
-    "temp_oleo": 95
+    "temp_oleo": 95,
+    "pressao_pas": 140,
+    "torque": 3500,
+    "ruido": 75,
+    "pressao_oleo": 4,
+    "potencia": 2000,
+    "temp_rolamento": 80,
+    "temp_gearbox": 85,
+    "consumo": 300
   },
   {
     "vento": 8,
@@ -37,7 +69,15 @@
     "precipitacao": 0,
     "rpm": 9,
     "vibracao": 2,
-    "temp_oleo": 60
+    "temp_oleo": 60,
+    "pressao_pas": 125,
+    "torque": 2200,
+    "ruido": 58,
+    "pressao_oleo": 2.8,
+    "potencia": 800,
+    "temp_rolamento": 50,
+    "temp_gearbox": 55,
+    "consumo": 110
   },
   {
     "vento": 9,
@@ -45,7 +85,15 @@
     "precipitacao": 40,
     "rpm": 10,
     "vibracao": 2,
-    "temp_oleo": 60
+    "temp_oleo": 60,
+    "pressao_pas": 120,
+    "torque": 2100,
+    "ruido": 55,
+    "pressao_oleo": 2.9,
+    "potencia": 900,
+    "temp_rolamento": 48,
+    "temp_gearbox": 52,
+    "consumo": 115
   },
   {
     "vento": 12,
@@ -53,7 +101,15 @@
     "precipitacao": 5,
     "rpm": 3,
     "vibracao": 2,
-    "temp_oleo": 60
+    "temp_oleo": 60,
+    "pressao_pas": 135,
+    "torque": 2800,
+    "ruido": 65,
+    "pressao_oleo": 3.2,
+    "potencia": 1200,
+    "temp_rolamento": 55,
+    "temp_gearbox": 60,
+    "consumo": 130
   },
   {
     "vento": 15,
@@ -61,7 +117,15 @@
     "precipitacao": 0,
     "rpm": 20,
     "vibracao": 1,
-    "temp_oleo": 55
+    "temp_oleo": 55,
+    "pressao_pas": 150,
+    "torque": 3200,
+    "ruido": 68,
+    "pressao_oleo": 4.1,
+    "potencia": 2500,
+    "temp_rolamento": 90,
+    "temp_gearbox": 100,
+    "consumo": 400
   },
   {
     "vento": 5,
@@ -69,7 +133,15 @@
     "precipitacao": 0,
     "rpm": 6,
     "vibracao": 3,
-    "temp_oleo": 85
+    "temp_oleo": 85,
+    "pressao_pas": 115,
+    "torque": 1800,
+    "ruido": 52,
+    "pressao_oleo": 2.2,
+    "potencia": 700,
+    "temp_rolamento": 42,
+    "temp_gearbox": 47,
+    "consumo": 105
   },
   {
     "vento": 18,
@@ -77,6 +149,14 @@
     "precipitacao": 10,
     "rpm": 4,
     "vibracao": 4.5,
-    "temp_oleo": 100
+    "temp_oleo": 100,
+    "pressao_pas": 155,
+    "torque": 3400,
+    "ruido": 78,
+    "pressao_oleo": 4.5,
+    "potencia": 2700,
+    "temp_rolamento": 110,
+    "temp_gearbox": 115,
+    "consumo": 480
   }
 ]

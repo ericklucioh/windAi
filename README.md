@@ -42,23 +42,32 @@ O arquivo `fluxograma_regras.mmd` contém o fluxograma das decisões do sistema 
 - https://mermaid.live/
 - Extensões do VS Code (ex: Markdown Preview Mermaid Support)
 
-## Variáveis analisadas
+
+## Variáveis analisadas (conforme fluxograma)
 - **vento**: velocidade do vento (m/s)
-- **temp_ar**: temperatura do ar (°C)
-- **precipitacao**: precipitação (mm/h)
 - **rpm**: rotações por minuto
 - **vibracao**: vibração (m/s²)
 - **temp_oleo**: temperatura do óleo (°C)
+- **pressao_pas**: pressão hidráulica das pás (bar)
+- **torque**: torque das pás (Nm)
+- **ruido**: ruído mecânico (dB)
+- **pressao_oleo**: pressão do óleo lubrificante (bar)
+- **potencia**: potência gerada (kW)
+- **temp_rolamento**: temperatura do rolamento (°C)
+- **temp_gearbox**: temperatura do gearbox (°C)
+- **consumo**: consumo elétrico (kW)
 
-## Exemplos de Diagnóstico
-- Turbina não gera energia (vento muito baixo)
-- Turbina desligada por segurança (vento muito alto)
-- Possível falha mecânica (vibração elevada)
-- Superaquecimento (temperatura do óleo alta)
-- Baixa eficiência (temperatura ambiente alta)
-- Alto desgaste (precipitação intensa)
-- Falha na rotação (RPM baixo mesmo com vento alto)
-- Operação normal
+## Exemplos de Diagnóstico (conforme regras atuais)
+- Falha de sensor/atuador (RPM muito baixo com vento fora do normal)
+- Vazamento ou ar no óleo (pressão hidráulica das pás fora do normal)
+- Erro de calibração (torque das pás fora do padrão)
+- Checar sistema de Yaw (vibração alta, temperatura do óleo normal)
+- Ajuste de temperatura (temperatura do óleo alta, vibração normal)
+- Vazamento de óleo ou problema na bomba (pressão do óleo lubrificante fora do normal)
+- Falha em rolamento (vibração, temperatura do óleo e ruído elevados, ou temperatura de rolamento/gearbox alta)
+- Erro mecânico (vibração extrema ou consumo elétrico anormal)
+- Erro de sensor (potência não condiz com vento)
+- Sistema OK (todos os parâmetros dentro dos valores esperados)
 
 ## Equipe
 Grupo 2 - PBL 2 - Usina Eólica

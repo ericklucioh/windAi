@@ -1,33 +1,70 @@
 flowchart TD
     Start([Início])
-    VentoBaixo{Vento < 3 m/s?}
-    VentoAlto{Vento > 25 m/s?}
-    VibracaoAlta{Vibração > 4 m/s²?}
-    TempOleoAlta{Temp. óleo > 90°C?}
-    TempArAlta{Temp. ar > 35°C?}
-    PrecipitacaoAlta{Precipitação > 30 mm/h?}
-    RpmBaixo{RPM < 5 e Vento > 10 m/s?}
-    Normal[Operação normal\nTodos os parâmetros dentro dos valores esperados]
-    NaoGera[Turbina não gera energia\nVento muito baixo]
-    Desligada[Turbina desligada por segurança\nVento muito alto]
-    FalhaMecanica[Possível falha mecânica\nVibração elevada]
-    Superaquecimento[Superaquecimento\nTemp. do óleo alta]
-    BaixaEficiencia[Baixa eficiência\nTemp. ambiente alta]
-    AltoDesgaste[Alto desgaste\nPrecipitação intensa]
-    FalhaRotacao[Falha na rotação\nRPM baixo mesmo com vento alto]
 
-    Start --> VentoBaixo
-    VentoBaixo -- Sim --> NaoGera
-    VentoBaixo -- Não --> VentoAlto
-    VentoAlto -- Sim --> Desligada
-    VentoAlto -- Não --> VibracaoAlta
-    VibracaoAlta -- Sim --> FalhaMecanica
-    VibracaoAlta -- Não --> TempOleoAlta
-    TempOleoAlta -- Sim --> Superaquecimento
-    TempOleoAlta -- Não --> TempArAlta
-    TempArAlta -- Sim --> BaixaEficiencia
-    TempArAlta -- Não --> PrecipitacaoAlta
-    PrecipitacaoAlta -- Sim --> AltoDesgaste
-    PrecipitacaoAlta -- Não --> RpmBaixo
-    RpmBaixo -- Sim --> FalhaRotacao
-    RpmBaixo -- Não --> Normal
+    Sintoma1{Falha nas pás ou monitoramento?}
+    PitchTravado{Sistema de pitch travado?}
+    PressaoPas{Pressão hidráulica das pás fora do normal?}
+    TorqueAnormal{Torque fora do padrão?}
+
+    Sintoma2{Anormalidade em vibração ou temperatura?}
+    VibracaoAlta{Vibração muito alta?}
+    TempOleo{Temp. do óleo > 80°C?}
+    RuidoAnormal{Ruído mecânico fora do padrão?}
+
+    PressaoOleo{Pressão do óleo lubrificante fora do normal?}
+    VibracaoAnormal{Vibração fora do padrão?}
+
+    RespostaPotencia{Potência condiz com velocidade do vento?}
+    TempRolamento{Temperatura de rolamento ou gearbox > 90°C?}
+    ConsumoAnormal{Consumo elétrico anormal?}
+
+    OK[Sistema OK]
+    SensorErro[Erro de sensor]
+    SensorAtuador[Falha de sensor/atuador]
+    Calibracao[Erro de calibração]
+    Vazamento[Vazamento ou ar no óleo]
+    VazamentoBomba[Vazamento de óleo ou problema na bomba]
+    Rolamento[Falha em rolamento]
+    Mecanico[Erro mecânico]
+    AjusteTemp[Ajuste de temperatura]
+    Yaw[Checar sistema de Yaw]
+
+    Start --> Sintoma1
+
+    %% --- RAMO 1 --- Sintomas de falha no pitch
+    Sintoma1 -- Sim --> PitchTravado
+    PitchTravado -- Sim --> SensorAtuador
+    PitchTravado -- Não --> PressaoPas
+    PressaoPas -- Sim --> Vazamento
+    PressaoPas -- Não --> TorqueAnormal
+    TorqueAnormal -- Sim --> Calibracao
+    TorqueAnormal -- Não --> OK
+
+    %% --- RAMO 2 --- Sintomas de vibração ou temperatura
+    Sintoma1 -- Não --> Sintoma2
+    Sintoma2 -- Sim --> VibracaoAlta
+    VibracaoAlta -- Sim --> TempOleo
+    VibracaoAlta -- Não --> Yaw
+
+    TempOleo -- Sim --> RuidoAnormal
+    TempOleo -- Não --> AjusteTemp
+
+    RuidoAnormal -- Sim --> Rolamento
+    RuidoAnormal -- Não --> SensorErro
+
+    %% --- RAMO 3 --- Parâmetros relacionados a óleo e vibração
+    Sintoma2 -- Não --> PressaoOleo
+    PressaoOleo -- Sim --> VazamentoBomba
+    PressaoOleo -- Não --> VibracaoAnormal
+
+    VibracaoAnormal -- Sim --> Mecanico
+    VibracaoAnormal -- Não --> OK
+
+    %% --- Novos Parâmetros --- Integrando dados adicionais
+    Sintoma1 -- Não --> RespostaPotencia
+    RespostaPotencia -- Não --> SensorErro
+    RespostaPotencia -- Sim --> TempRolamento
+    TempRolamento -- Sim --> Rolamento
+    TempRolamento -- Não --> ConsumoAnormal
+    ConsumoAnormal -- Sim --> Mecanico
+    ConsumoAnormal -- Não --> OK
