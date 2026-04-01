@@ -1,25 +1,40 @@
+
 from models.event import Event
 from models.result import Result
+from src.config import (
+    LIMITE_VENTO, LIMITE_PITCH_RPM, LIMITE_PRESSAO_PAS, LIMITE_TORQUE, LIMITE_VIBRACAO, LIMITE_TEMP_OLEO,
+    LIMITE_RUIDO, LIMITE_PRESSAO_OLEO, LIMITE_POTENCIA_MULT, LIMITE_TEMP_COMPONENTE, LIMITE_CONSUMO
+)
 
 
 def diagnosticar(event: Event) -> Result:
 
-    # RAMO 1: Falha nas pás ou monitoramento?
-    if event.vento < 3 or event.vento > 25:
-        # Pitch travado?
-        if event.rpm < 2:
+    res = (
+        diagnostico_pasco_monitoramento(event)
+        or diagnostico_vibracao_temperatura(event)
+        or diagnostico_oleo_vibracao(event)
+        or diagnostico_potencia_rolamento_consumo(event)
+        or Result(
+            mensagem="Sistema OK",
+            explicacao="Todos os parâmetros estão dentro dos valores esperados."
+        )
+    )
+    return res
+
+
+def diagnostico_pasco_monitoramento(event: Event):
+    if event.vento < LIMITE_VENTO[0] or event.vento > LIMITE_VENTO[1]:
+        if event.rpm < LIMITE_PITCH_RPM:
             return Result(
                 mensagem="Falha de sensor/atuador",
                 explicacao="RPM muito baixo com vento fora do normal sugere problema no sistema de pitch ou sensor/atuador."
             )
-        # Pressão hidráulica das pás fora do normal?
-        elif event.pressao_pas < 80 or event.pressao_pas > 160:
+        elif event.pressao_pas < LIMITE_PRESSAO_PAS[0] or event.pressao_pas > LIMITE_PRESSAO_PAS[1]:
             return Result(
                 mensagem="Vazamento ou ar no óleo",
                 explicacao="Pressão hidráulica das pás fora do normal pode indicar vazamento ou ar no óleo."
             )
-        # Torque fora do padrão?
-        elif event.torque < 1000 or event.torque > 4000:
+        elif event.torque < LIMITE_TORQUE[0] or event.torque > LIMITE_TORQUE[1]:
             return Result(
                 mensagem="Erro de calibração",
                 explicacao="Torque das pás fora do padrão pode indicar erro de calibração."
@@ -30,14 +45,11 @@ def diagnosticar(event: Event) -> Result:
                 explicacao="Vento fora do normal, mas demais parâmetros aceitáveis."
             )
 
-    # RAMO 2: Anormalidade em vibração ou temperatura?
-    if event.vibracao > 5 or event.temp_oleo > 80:
-        # Vibração muito alta?
-        if event.vibracao > 5:
-            # Temp. do óleo > 80°C?
-            if event.temp_oleo > 80:
-                # Ruído mecânico fora do padrão?
-                if event.ruido > 80:
+def diagnostico_vibracao_temperatura(event: Event):
+    if event.vibracao > LIMITE_VIBRACAO or event.temp_oleo > LIMITE_TEMP_OLEO:
+        if event.vibracao > LIMITE_VIBRACAO:
+            if event.temp_oleo > LIMITE_TEMP_OLEO:
+                if event.ruido > LIMITE_RUIDO:
                     return Result(
                         mensagem="Falha em rolamento",
                         explicacao="Vibração e temperatura do óleo muito altas, com ruído elevado, sugerem falha em rolamento."
@@ -52,48 +64,39 @@ def diagnosticar(event: Event) -> Result:
                     mensagem="Checar sistema de Yaw",
                     explicacao="Vibração alta, mas temperatura do óleo normal. Checar desalinhamento do Yaw."
                 )
-        # Temp. do óleo > 80°C?
-        elif event.temp_oleo > 80:
+        elif event.temp_oleo > LIMITE_TEMP_OLEO:
             return Result(
                 mensagem="Ajuste de temperatura",
                 explicacao="Temperatura do óleo alta, mas vibração normal. Ajustar sistema de resfriamento."
             )
 
-    # RAMO 3: Parâmetros relacionados a óleo e vibração
-    # Pressão do óleo lubrificante fora do normal?
-    if event.pressao_oleo < 1 or event.pressao_oleo > 5:
+def diagnostico_oleo_vibracao(event: Event):
+    if event.pressao_oleo < LIMITE_PRESSAO_OLEO[0] or event.pressao_oleo > LIMITE_PRESSAO_OLEO[1]:
         return Result(
             mensagem="Vazamento de óleo ou problema na bomba",
             explicacao="Pressão do óleo lubrificante fora do normal pode indicar vazamento ou problema na bomba."
         )
-    # Vibração fora do padrão?
-    if event.vibracao > 5:
+    if event.vibracao > LIMITE_VIBRACAO:
         return Result(
             mensagem="Erro mecânico",
             explicacao="Vibração extrema sugere erro mecânico grave."
         )
 
-    # Novos parâmetros: Potência condiz com velocidade do vento?
-    if not (event.potencia >= 0.5 * event.vento * 100 and event.potencia <= 1.5 * event.vento * 100):
+def diagnostico_potencia_rolamento_consumo(event: Event):
+    pot_min = LIMITE_POTENCIA_MULT[0] * event.vento * 100
+    pot_max = LIMITE_POTENCIA_MULT[1] * event.vento * 100
+    if not (pot_min <= event.potencia <= pot_max):
         return Result(
             mensagem="Erro de sensor",
             explicacao="Potência não condiz com velocidade do vento. Possível erro de sensor."
         )
-    # Temperatura de rolamento ou gearbox > 90°C?
-    if event.temp_rolamento > 90 or event.temp_gearbox > 90:
+    if event.temp_rolamento > LIMITE_TEMP_COMPONENTE or event.temp_gearbox > LIMITE_TEMP_COMPONENTE:
         return Result(
             mensagem="Falha em rolamento",
             explicacao="Temperatura de rolamento ou gearbox muito alta pode indicar falha."
         )
-    # Consumo elétrico anormal?
-    if event.consumo > 400:
+    if event.consumo > LIMITE_CONSUMO:
         return Result(
             mensagem="Erro mecânico",
             explicacao="Consumo elétrico anormal sugere erro mecânico."
         )
-
-    # Se nada acima, sistema OK
-    return Result(
-        mensagem="Sistema OK",
-        explicacao="Todos os parâmetros estão dentro dos valores esperados."
-    )
